@@ -25,8 +25,6 @@ class test_Task (unittest.TestCase):
         self.client = Client()
         response = self.client.get(reverse('home'))
         questions = quizQuestions.objects.all()
-        print(questions)
-        print(str(response.content.decode("utf-8")))
         for quiz in questions:
             assert quiz.question in str(response.content.decode("utf-8"))
 
@@ -63,5 +61,24 @@ class test_Task (unittest.TestCase):
         assert "score" in response.context
         s = response.context['score']
         self.assertEqual(s, 30)
+
+
+
+
+            assert quiz.question in str(response.content.decode("utf-8"))
+
+    def test_submit_all_correct_answers(self):
+        # Simulate a POST request with correct answers
+        questions = quizQuestions.objects.all()
+        self.client = Client()
+        response = self.client.post(reverse('home'), {
+            "Which one is not a Hogwarts house?" : "Dragonheart",
+            "What spell did Harry use to kill Lord Voldemort?" : "Expelliarmus",
+            "Where does Hermione brew her first batch of Polyjuice Potion?" : "Moaning Myrtle’s Bathroom",
+            "From what King’s Cross platform does the Hogwarts Express leave?" : "Nine and Three-quarters",
+            "What position does Harry play on the Gryffindor Quidditch team?" : "Seeker"
+        })
+
+
 
 
