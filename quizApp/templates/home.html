@@ -6,6 +6,7 @@
 </head>
 <body>
 <h1>Welcome to the Harry Potter Quiz</h1>
+<a href= {% url 'questionEditList' %} >Edit Question</a>
 <form method='post' action=''>
 {% csrf_token %}
     {{ form }}

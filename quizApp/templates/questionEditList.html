@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Click on the question below you wish to edit</h1>
+ <form method="post">
+{% csrf_token %}
+{% for quest in questions %}
+
+
+        <h2>{{ quest.question }}</h2>
+        <button type="submit" class="btn btn-primary" name="questID"
+                value="{{quest.id}}" formaction="{% url 'editQuestion' %}">Edit</button>
+
+
+{% endfor %}
+ </form>
+</body>
+</html>

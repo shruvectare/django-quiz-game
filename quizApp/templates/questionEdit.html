@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form method='post' action=''>
+    {% csrf_token %}
+    <input type="text" name="questID" value = "{{ id }}" style="display:none" />
+    <div class="form-field">
+        <p><b>Question </b></p>
+        {{ form.question }}
+    </div>
+
+    <div class="form-field">
+        <p><b>Option 1</b></p>
+        {{ form.option1 }}
+    </div>
+
+    <div class="form-field">
+        <p><b>Option 2</b></p>
+        {{ form.option2 }}
+    </div>
+
+    <div class="form-field">
+        <p><b>Option 3</b></p>
+        {{ form.option3 }}
+    </div>
+
+    <div class="form-field">
+        <p><b>Option 4</b></p>
+        {{ form.option4 }}
+    </div>
+
+    <div class="form-field">
+        <p><b>Answer</b></p>
+        {{ form.answer }}
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary" formaction="">Submit</button>
+</form>
+
+</body>
+</html>
