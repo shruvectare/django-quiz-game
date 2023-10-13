@@ -1,64 +1,73 @@
 from django.shortcuts import render, redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.views.generic import FormView, ListView, UpdateView, CreateView
 
 from .models import quizQuestions
 from .forms import quizForm
 from .editQuestionForm import editQuizForm
+from django.views import View
+from .addQuestion import addQuestion
 
 # Create your views here.
 
-def home(request):
+# def home(request):
+#     if request.method == 'POST':
+#         form = quizForm(request.POST)
+#         if form.is_valid():
+#             questions = quizQuestions.objects.all()
+#             score = 0
+#             context = {}
+#             for q in questions:
+#
+#                 if q.answer == form.cleaned_data[str(q.id)]:
+#                     score += 10
+#                 context = {
+#                     'score': score,
+#                     'questions': questions,
+#                     'form' : form
+#                 }
+#             return render(request, 'home.html', context)
+#     else:
+#         questions = quizQuestions.objects.all()
+#         form = quizForm()
+#         context = {
+#             'questions': questions,
+#             'form': form
+#         }
+#         return render(request, 'home.html', context)
 
-    if request.method == 'POST':
-        form = quizForm(request.POST)
+class QuizFormView(FormView):
+    template_name = 'home.html'
+    form_class = quizForm
 
-        if form.is_valid():
-            questions = quizQuestions.objects.all()
-            score = 0
-
-            context = {}
-            for q in questions:
-
-                if q.answer == form.cleaned_data[str(q.id)]:
-                    score += 10
-                context = {
-                    'score': score,
-                    'questions': questions,
-                    'form' : form
-                }
-            return render(request, 'home.html', context)
-    else:
+    def form_valid(self, form):
         questions = quizQuestions.objects.all()
-        form = quizForm()
-        context = {
-            'questions': questions,
-            'form': form
-        }
-        return render(request, 'home.html', context)
+        score = 0
+        context = {}
+        for q in questions:
 
-def questionEditList(request):
-    questions = quizQuestions.objects.all()
-    context = {
-        'questions': questions,
-    }
-    return render(request, 'questionEditList.html', context)
+            if q.answer == form.cleaned_data[str(q.id)]:
+                score += 10
+            context = self.get_context_data()
+            context["score"] = score
+        return render(self.request, self.template_name, context)
 
-def editQuestion(request):
-    qid = request.POST["questID"]
-    question = quizQuestions.objects.get(id=qid)
-    if request.method == "POST" :
-        editform = editQuizForm(request.POST, instance=question)
-        if editform.is_valid():
-            editform.save()
 
-            return redirect(reverse('home'))
+class QuestionListView(ListView):
+    template_name = 'questionEditList.html'
+    model = quizQuestions
 
-        else :
-            form = editQuizForm(instance=question)
-            context = {
-                'id' : qid,
-                'question' : question,
-                'form' :  form
-            }
-            return render(request, 'questionEdit.html', context)
+
+class QuestionUpdateView(UpdateView):
+    template_name = 'questionEdit.html'
+    model = quizQuestions
+    form_class = editQuizForm
+    success_url = reverse_lazy('home')
+
+
+class AddQuestionView(CreateView):
+    template_name = "addQuestion.html"
+    form_class = addQuestion
+    success_url = reverse_lazy('home')
+
 
