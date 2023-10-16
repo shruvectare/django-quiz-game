@@ -4,8 +4,9 @@ from .models import quizQuestions
 class quizForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
+        quiz_id = kwargs.pop('quiz_id')
         super().__init__(*args, **kwargs)
-        quiz_questions = quizQuestions.objects.all()
+        quiz_questions = quizQuestions.objects.filter(quiz_id=quiz_id)
         for q in quiz_questions:
             options = [
                 (q.option1, q.option1),
